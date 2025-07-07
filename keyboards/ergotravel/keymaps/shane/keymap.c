@@ -1,10 +1,30 @@
 ﻿#include QMK_KEYBOARD_H
 
-extern keymap_config_t keymap_config;
+extern uint8_t is_master;
 
-// #define KC_ KC_TRNS
-#define _______ KC_TRNS
+enum custom_keycodes {
+    M_EQL = SAFE_RANGE,
+    M_DBL_EQL,
+};
 
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    case M_EQL:
+        if (record->event.pressed) {
+            SEND_STRING(" = ");
+        } else {
+        }
+        break;
+    case M_DBL_EQL:
+        if (record->event.pressed) {
+            SEND_STRING(" == ");
+        } else {
+
+        }
+        break;
+    }
+    return true;
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -22,7 +42,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [1] = LAYOUT(
   //,--------+--------+--------+--------+--------+--------+--------.        ,--------+--------+--------+--------+--------+--------+--------.
-     KC_GRV,  S(KC_1), S(KC_3), KC_LBRC, KC_RBRC,S(KC_BSLS),KC_TRNS,          KC_TRNS,     M(1),   KC_7,    KC_8,   KC_9,      M(2), KC_DEL,
+     KC_GRV,  S(KC_1), S(KC_3), KC_LBRC, KC_RBRC,S(KC_BSLS),KC_TRNS,          KC_TRNS,   M_EQL,   KC_7,    KC_8,   KC_9, M_DBL_EQL, KC_DEL,
   //|--------+--------+--------+--------+--------+--------+--------|        |--------+--------+--------+--------+--------+--------+--------|
      KC_TAB,   S(KC_2), S(KC_4), S(KC_9), S(KC_0), S(KC_7), KC_TRNS,          KC_TRNS, KC_SLSH,   KC_4,    KC_5,   KC_6,   S(KC_8), KC_BSPC,
   //|--------+--------+--------+--------+--------+--------+--------|        |--------+--------+--------+--------+--------+--------+--------|
@@ -56,22 +76,4 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //`--------+--------+--------+--------+--------+--------+--------/        \--------+--------+--------+--------+--------+--------+--------'
   )
 
-};
-
-const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt) 
-{
-  // MACRODOWN only works in this function
-      switch(id) {
-        case 1:
-          if (record->event.pressed) {
-            return MACRO(T(SPC), T(EQL), T(SPC), END);
-          }
-        break;
-    case 2:
-          if (record->event.pressed) {
-            return MACRO(T(SPC), T(EQL), T(EQL), T(SPC), END);
-          }
-        break;
-      }
-    return MACRO_NONE;
 };
